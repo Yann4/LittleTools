@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 {
     string expr = "100+50/(10*(50+1)^2)";
     queue<expr_element> q = infix_to_rpn(expr);
-    
+
     while(!q.empty())
     {
         if(q.front().isOperator)
@@ -56,22 +56,22 @@ int main(int argc, char** argv)
 vector<oper> construct_op_list()
 {
     vector<oper> ops;
-    
+
     oper temp_op("+", 2, false);
     ops.push_back(temp_op);
-    
+
     temp_op = oper("-", 2, false);
     ops.push_back(temp_op);
-    
+
     temp_op = oper("*", 3, false);
     ops.push_back(temp_op);
-    
+
     temp_op = oper("/", 3, false);
     ops.push_back(temp_op);
-    
+
     temp_op = oper("^", 4, true);
     ops.push_back(temp_op);
-    
+
     temp_op = oper("(", 999, true);
     ops.push_back(temp_op);
 
@@ -82,10 +82,10 @@ queue<expr_element> infix_to_rpn(string infix)
 {
     vector<oper> operators = construct_op_list();
     string numbers = "1234567890";
-    
+
     queue<expr_element> output;
     stack<oper> ops;
-    
+
     for(int i = 0; i < infix.size(); ++i)
     {
         string token = infix.substr(i, 1);
@@ -98,7 +98,7 @@ queue<expr_element> infix_to_rpn(string infix)
                 cnt++;
             }
             token = infix.substr(i, cnt);
-            
+
             output.push(expr_element(std::stod(token)));
             i += cnt - 1;
         }else if(token == ")")
@@ -115,7 +115,7 @@ queue<expr_element> infix_to_rpn(string infix)
                 }
             }
             ops.pop();
-            
+
         }else //Token is an operator
         {
             oper o1;
@@ -128,11 +128,11 @@ queue<expr_element> infix_to_rpn(string infix)
                     break;
                 }
             }
-            
+
             if(!ops.empty())
             {
                 oper o2 = ops.top();
-                
+
                 if(o2.val != "(" && ((!o1.rightAss && o1.prio <= o2.prio) || (o1.rightAss && o1.prio < o2.prio)))
                 {
                     ops.pop();
@@ -142,13 +142,13 @@ queue<expr_element> infix_to_rpn(string infix)
             ops.push(o1);
         }
     }
-    
+
     while(!ops.empty())
     {
         output.push(ops.top());
         ops.pop();
     }
-    
+
     return output;
 }
 
