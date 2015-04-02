@@ -3,7 +3,8 @@
 
 #include <iterator>
 #include <list>
-#include <tuple>
+#include <algorithm>
+#include <array>
 
 #include <stdexcept>
 
@@ -20,7 +21,7 @@ class Quack
         Quack();
 
         void insert(T dat);
-        std::tuple<T, T> poppop();
+        std::array<T, 2u> poppop();
 void print();
         inline bool empty(){return data.empty();};
     private:
@@ -53,13 +54,12 @@ void Quack<T>::insert(T dat)
     }
     else
     {
-        data.insert(linearSearch(dat), dat);
-        //data.insert(binarySearch(dat, data.begin(), data.end()), dat);
+        data.insert(std::lower_bound(data.begin(), data.end(), dat), dat);
     }
 }
 
 template <class T>
-std::tuple<T, T> Quack<T>::poppop()
+std::array<T, 2u> Quack<T>::poppop()
 {
     if(data.empty())
     {
@@ -69,7 +69,7 @@ std::tuple<T, T> Quack<T>::poppop()
         throw std::range_error("One item left in the quack - Cannot form tuple");
     }else
     {
-        std::tuple<T, T> d(data.front(), data.back());
+        std::array<T, 2u> d{{data.front(), data.back()}};
         data.pop_front();
         data.pop_back();
         return d;
@@ -80,22 +80,7 @@ std::tuple<T, T> Quack<T>::poppop()
 template <class T>
 typename std::list<T>::iterator Quack<T>::linearSearch(T toFind)
 {
-    if(data.empty())
-    {
-        return data.begin();
-    }
-
-    for(iter it = data.begin(); it != data.end();)
-    {
-        if(toFind > *it)
-        {
-            it++;
-        }else
-        {
-            return it;
-        }
-    }
-    return data.end();
+    return std::find(data.begin(), data.end(), toFind);
 }
 
 template <class T>
